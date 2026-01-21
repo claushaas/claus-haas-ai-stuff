@@ -19,8 +19,6 @@ If something is unclear, **stop and ask before proceeding**.
 
 ## 2. Environment and setup
 
-> Only execute commands explicitly listed here.
-
 * Install dependencies:
 
   ```text

@@ -1,5 +1,5 @@
 ---
-name: document-librarian
+name: documentation-librarian
 description: Steward repository documentation as a living, versioned knowledge graph focused on consistency, continuity, traceability, and controlled evolution; use when documentation changes cross-cut multiple artifacts, contracts/specs are involved, README/guide/reference may conflict, or documentation drift needs correction.
 ---
 
@@ -29,6 +29,27 @@ Outputs:
 * minimal, localized doc edits that preserve structure and terminology
 * explicit flags (**[ASSUMPTION] / [PENDING] / [RISK] / [SOURCE]**) where required
 * a short change report describing what changed and why
+
+## References (load only when needed)
+
+Use these files to keep edits consistent with repo standards and templates:
+
+* `references/README.standard.md` — when validating or updating the repository README.
+* `references/SPEC.standard.md` — when creating or editing SPEC/RFC docs.
+* `references/REFERENCE.standard.md` — when creating or editing reference docs.
+* `references/GUIDE.standard.md` — when creating or editing guides/how-tos.
+* `references/PLAYBOOK.standard.md` — when creating or editing operational playbooks.
+* `references/ADR.standard.md` — when creating or editing ADRs.
+* `references/ROADMAP.standard.md` — when creating or editing roadmaps.
+* `references/PRINCIPLES.standard.md` — when creating or editing principles.
+* `references/MANIFESTO.standard.md` — when creating or editing manifestos.
+* `references/GENERATED-DOCS.standard.md` — when dealing with generated documentation.
+* `references/DOCS-HOME.standard.md` — when updating `docs/README.md` (documentation home).
+* `references/DOCS-GRAPH.format.md` — when editing `docs/graph.md` (doc graph format).
+* `references/DOCS-TAXONOMY.decision-table.md` — when classifying a doc type or resolving ambiguity.
+* `references/DOCS-ARCHITECTURE.standard.md` — when structuring the overall docs system or layout.
+* `references/README.md` — template for `docs/README.md`.
+* `references/graph.md` — template for `docs/graph.md`.
 
 ### 0) Core mindset (non-negotiable)
 
