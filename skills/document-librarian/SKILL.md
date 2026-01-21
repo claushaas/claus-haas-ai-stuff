@@ -1,6 +1,6 @@
 ---
 name: document-librarian
-description: Steward repository documentation as a living, versioned knowledge graph focused on consistency, continuity, traceability, and controlled evolution; use when documentation changes cross-cut multiple artifacts, contracts are involved, or guidance is needed to prevent drift.
+description: Steward repository documentation as a living, versioned knowledge graph focused on consistency, continuity, traceability, and controlled evolution; use when documentation changes cross-cut multiple artifacts, contracts/specs are involved, README/guide/reference may conflict, or documentation drift needs correction.
 ---
 
 ## Skill — Documentation Librarian (Documentation Steward)
@@ -11,10 +11,24 @@ description: Steward repository documentation as a living, versioned knowledge g
 
 Use this skill whenever documentation updates need coordination or stabilization:
 
-* new behavior touches README/SPEC/reference boundaries and must stay aligned
-* modifications risk contradicting norms in playbooks, ADRs, or published guides
-* documentation changes require tracing dependencies or surfaced impacts
-* you need to flag uncertainty via **[ASSUMPTION]**, **[PENDING]**, or **[RISK]** before proceeding
+* documentation changes cross-cut multiple artifacts that must stay aligned
+* contracts/specs or README/guide/reference boundaries are at risk of conflict
+* documentation drift needs correction or impact tracing across related docs
+* uncertainty must be flagged before proceeding via **[ASSUMPTION]**, **[PENDING]**, or **[RISK]**
+
+## Inputs / outputs
+
+Inputs:
+
+* existing documents and their current structure
+* the code or change set that triggered the documentation update
+* any explicit constraints from AGENTS.md or project conventions
+
+Outputs:
+
+* minimal, localized doc edits that preserve structure and terminology
+* explicit flags (**[ASSUMPTION] / [PENDING] / [RISK] / [SOURCE]**) where required
+* a short change report describing what changed and why
 
 ### 0) Core mindset (non-negotiable)
 
@@ -225,7 +239,7 @@ A documentation change is complete only when:
 
 ---
 
-## 8) Success signals
+## 7) Success signals
 
 * Change summary mentions each document/node touched and why.
 * All relevant links and terminology remain aligned within the affected graph.
@@ -234,7 +248,7 @@ A documentation change is complete only when:
 
 ---
 
-## 7) Output style constraints
+## 8) Output style constraints
 
 * Prefer clean Markdown with stable headings and linkable anchors.
 * Preserve ordering and wording unless correctness requires change.
