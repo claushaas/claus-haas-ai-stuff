@@ -1,84 +1,178 @@
 ---
 name: docs-adr
-description: Atualizacao de documentacao e ADRs para decisoes arquiteturais. Use quando houver mudanca de design, novas features ou necessidade de registrar decisoes.
+description: Documentation and ADR updates for architectural decisions. Use when there are design changes, new features, or a need to record decisions.
 ---
 
-## Name
+# Skill: Documentation & ADRs
 
-docs-adr
+## Purpose
 
-## When to use
+Produce and maintain **accurate, decision-oriented documentation** and **Architecture Decision Records (ADRs)** that reflect the current state of the system and its rationale.
 
-- Decisao arquitetural relevante.
-- Mudanca de fluxo, API ou infraestrutura.
-- Necessidade de atualizar README ou guias.
+This skill is intended to support **architectural clarity, long-term maintainability, and informed decision-making**, not to prescribe design choices in advance.
 
-## Inputs required
+No documentation strategy or ADR format should be assumed before analyzing the repository context.
 
-- Publico alvo da documentacao.
-- Escopo da mudanca e impactos.
-- Local atual de docs (se existir).
-- Se algo estiver faltando, parar e perguntar ao DEV.
-Perguntas ao DEV:
-- Quem e o publico principal (devs internos, usuarios)?
-- Quais docs precisam ser atualizados?
-- Quer ADR formal ou nota curta?
+---
 
-## Repo Signals
+## When to Use
 
-Preencher este bloco antes de qualquer plano. Se algo estiver Unknown, perguntar ao DEV.
+- Making or revisiting a significant architectural decision
+- Introducing changes that affect system structure, APIs, or data flows
+- Adding new features with non-trivial design implications
+- Aligning documentation with evolved or refactored code
+- Preserving decision rationale for future maintainers
 
-- Stack: Node.js (package.json, type: module). Frameworks: Unknown.
-- Convencoes: Unknown (nenhum lint/format detectado).
-- Tests: script `test` placeholder, sem framework detectado.
-- CI/CD: Unknown (sem `.github/workflows` detectado).
-- Arquitetura: Unknown (sem `src/`/`packages/`; somente `/exemplos`).
+---
+
+## Inputs Required
+
+Before drafting or updating documentation, collect:
+
+- The decision, change, or topic to be documented
+- Target audience(s) (internal developers, contributors, operators, users)
+- Scope and impact of the change
+- Existing documentation locations and formats (if any)
+
+If any input is missing or ambiguous, **stop and ask the DEV**.
+
+### Mandatory DEV Questions
+
+- Who is the primary audience for this documentation?
+- What decision or change must be recorded or explained?
+- Is this a new decision or a revision of a past one?
+- Should this be captured as a formal ADR or lightweight documentation?
+
+---
+
+## Repo Signals (Observation Only)
+
+This section must be completed **before proposing any documentation approach**.  
+Only record **observable facts**.
+
+- **Project maturity**: early-stage, growing, or stable
+- **Existing docs**: presence, structure, and freshness
+- **ADR usage**: none, ad-hoc, or standardized
+- **Change frequency**: architectural churn vs stability
+- **Contribution model**: solo, small team, or open contributors
+
+If any signal is unclear, confirm with the DEV.
+
+---
+
+## Implications (Derived)
+
+From the observed Repo Signals, derive implications such as:
+
+- Level of formality required in documentation
+- Risk of documentation drift if over- or under-specified
+- Cost of maintaining detailed records over time
+- Importance of traceability versus speed
+- Onboarding and knowledge-transfer needs
+
+Explicitly state assumptions and validate them with the DEV when necessary.
+
+---
 
 ## Process
 
-1. Fazer Repo Scan e validar Repo Signals com o DEV. Perguntar: "Posso seguir assumindo estes sinais?"
-2. Identificar docs existentes e lacunas. Perguntar: "Estas lacunas estao corretas?"
-3. Propor escopo de docs/ADR. Perguntar: "Qual escopo devo seguir?"
-4. Redigir estrutura e checklist de atualizacao. Perguntar: "Posso produzir o rascunho?"
-5. Antes de publicar/alterar docs, pedir OK. Perguntar: "Posso aplicar as mudancas?"
+1. **Validate Repo Signals**  
+   Ask the DEV:  
+   > “Can I proceed assuming these repository signals are accurate?”
 
-## Options & trade-offs
+2. **Clarify the Decision or Change**  
+   Define what must be documented and why.  
+   Ask:  
+   > “Is this the correct scope for documentation?”
 
-Option A: Docs minimas + ADR curto.
+3. **Assess Documentation Needs**  
+   Determine required depth, structure, and longevity based on context.
 
-- Pros: rapido, baixo custo.
-- Cons: menos detalhe.
+4. **Derive Documentation Options**  
+   Based on analysis, generate **at least two and preferably three viable documentation approaches**, each consistent with the repository’s maturity and constraints.
 
-Option B: Docs completas + codemap/guia.
+5. **Evaluate Trade-offs**  
+   Compare options using objective criteria such as cost, clarity, maintenance burden, and alignment with industry practices.
 
-- Pros: onboarding melhor e menos duvidas.
-- Cons: alto custo de manutencao.
+6. **Formulate a Recommendation**  
+   Recommend one option with explicit rationale.
+
+7. **Confirm Before Writing or Updating**  
+   No documentation or ADR should be finalized without DEV approval.
+
+---
+
+## Options & Trade-offs (Context-Derived)
+
+This section must be generated **after analysis**, not pre-filled.
+
+For each option, include:
+
+- **Description**: What will be documented and how
+- **Pros**: Benefits in clarity, traceability, or alignment
+- **Cons**: Costs in effort, maintenance, or rigidity
+- **Longevity**: Expected useful lifespan of the documentation
+- **Maintenance cost**: Ongoing effort to keep it accurate
+- **Fit to current repo maturity**
+
+Options must be **fully derived from the observed context**, not generic templates.
+
+---
 
 ## Recommendation
 
-Recomendo Option A no estado atual do repo.
-Racional:
+Select **one** option as the recommended approach.
 
-- Estrutura do repo e simples e sem sinais de docs existentes.
-- Melhor registrar decisoes e criar base minima primeiro.
-- Facil de manter e evoluir conforme o projeto cresce.
+### Recommendation Criteria
 
-## Output format
+The recommendation must explicitly consider:
 
-- Repo Signals (bloco curto)
-- Lista de docs alvo e objetivo
-- ADR (titulo, contexto, decisao, consequencias)
-- Checklist de atualizacao
-- Perguntas para o DEV
+- Cost–benefit ratio
+- Repository maturity and expected growth
+- Industry benchmarks or common practices
+- Risk of under- or over-documentation
+- Long-term maintenance implications
 
-## Safety checks
+### Rationale (Required)
 
-- Evitar docs que nao reflitam o codigo real.
-- Sinalizar impacto de mudancas em usuarios.
-- Manter consistencia com terminologia do repo.
+Provide a concise rationale explaining:
 
-## Dev confirmation gates
+- Why this option best fits the current situation
+- Which trade-offs are consciously accepted
+- What future documentation work may be needed
 
-- Confirmar publico alvo e escopo.
-- Aprovar conteudo do ADR.
-- Aprovar publicacao/merge de docs.
+---
+
+## Output Format
+
+The response must include:
+
+1. Confirmed Repo Signals
+2. Summary of the decision or change being documented
+3. Context-derived documentation options with trade-offs
+4. Clear recommendation with rationale
+5. Proposed structure or outline (no full content unless approved)
+6. Open questions for the DEV
+
+---
+
+## Safety Checks
+
+- Do not document assumptions that are not validated
+- Avoid documentation that contradicts the current codebase
+- Clearly distinguish decisions from hypotheses
+- Avoid unnecessary verbosity in early-stage repos
+- Flag any documentation that may become stale quickly
+
+---
+
+## Dev Confirmation Gates
+
+Explicit DEV approval is required before:
+
+- Creating or updating ADRs
+- Publishing or merging documentation
+- Introducing new documentation standards or formats
+- Recording decisions with long-term impact
+
+Without confirmation, **do not proceed**.

@@ -1,87 +1,198 @@
 ---
 name: performance-profiling
-description: Analise de performance e profiling com foco em gargalos, latencia e uso de recursos. Use quando houver lentidao, alto consumo ou metas de performance.
+description: Performance analysis and profiling focused on bottlenecks, latency, and resource usage. Use when there is slowness, high resource consumption, or unmet performance targets.
+
 ---
 
-## Name
+# Name
 
 performance-profiling
 
+---
+
 ## When to use
 
-- Lentidao percebida por usuarios.
-- Metas de latencia/throughput nao atendidas.
-- Processos com alto consumo de CPU/memoria.
-- Antes de otimizar por intuicao.
+Use this skill when performance characteristics are unclear, degraded, or strategically important, including:
+
+- User-perceived slowness or timeouts
+- Latency, throughput, or resource targets not being met
+- High CPU, memory, or I/O usage
+- Suspected performance regressions
+- Before attempting optimizations based on intuition
+- When planning scalability or cost optimizations
+
+---
 
 ## Inputs required
 
-- Metricas alvo (latencia, throughput, memoria).
-- Ambiente de reproducao e dados de entrada.
-- Perfil de carga esperado.
-- Se algo estiver faltando, parar e perguntar ao DEV.
-Perguntas ao DEV:
-- Qual e a meta de performance e onde falha?
-- Em qual ambiente devo medir?
-- Ha logs ou traces existentes?
-- Posso instrumentar o codigo temporariamente?
+Before proposing any profiling or optimization approach, this skill requires:
 
-## Repo Signals
+- Target performance goals (latency, throughput, cost, resource usage)
+- Environment where performance should be measured (local, staging, prod)
+- Expected load profile (steady, bursty, peak)
+- Known critical paths or user journeys
+- Existing metrics, logs, or traces (if any)
 
-Preencher este bloco antes de qualquer plano. Se algo estiver Unknown, perguntar ao DEV.
+If any input is missing, **stop and ask the DEV**.
 
-- Stack: Node.js (package.json, type: module). Frameworks: Unknown.
-- Convencoes: Unknown (nenhum lint/format detectado).
-- Tests: script `test` placeholder, sem framework detectado.
-- CI/CD: Unknown (sem `.github/workflows` detectado).
-- Arquitetura: Unknown (sem `src/`/`packages/`; somente `/exemplos`).
+### Mandatory DEV questions
+
+- What performance target is currently failing (and how)?
+- In which environment should measurements be trusted?
+- Under what load does the issue appear?
+- Are there existing metrics or traces we can rely on?
+- Is temporary instrumentation acceptable?
+
+---
+
+## Repo Signals (observation)
+
+This section must be completed **before proposing options**.  
+If any item is `Unknown`, confirm with the DEV.
+
+- **Runtime & language**: execution model, concurrency
+- **Architecture shape**: monolith, services, async boundaries
+- **Workload type**: CPU-bound, I/O-bound, memory-bound
+- **Traffic profile**: volume, concurrency, variance
+- **Current observability**: metrics, traces, none, partial
+- **Test coverage**: presence of performance or regression tests
+- **Operational maturity**: CI, staging, rollback capability
+
+Only record **observable facts** here.  
+No prescriptions, no assumptions.
+
+---
+
+## Implications (interpretation)
+
+From the observed Repo Signals, derive implications such as:
+
+- Reliability of measurements and benchmarks
+- Risk of optimizing the wrong bottleneck
+- Cost of collecting accurate performance data
+- Likelihood of regressions after changes
+- Expected ROI of local vs structural optimizations
+- Whether performance issues are systemic or localized
+
+These implications **frame** the options; they do not decide them.
+
+---
 
 ## Process
 
-1. Fazer Repo Scan e validar Repo Signals com o DEV. Perguntar: "Posso seguir assumindo estes sinais?"
-2. Definir metricas e baseline. Perguntar: "Concorda com as metricas?"
-3. Reproduzir e coletar dados (profile/trace). Perguntar: "Posso coletar essas metricas?"
-4. Identificar top gargalos e propor opcoes. Perguntar: "Qual opcao devo detalhar?"
-5. Antes de otimizar, confirmar trade-offs. Perguntar: "Posso aplicar a otimizacao escolhida?"
+1. **Validate Repo Signals**  
+   Ask the DEV:  
+   > “Can I proceed assuming these repository signals are accurate?”
+
+2. **Define the performance question**  
+   Clarify whether the goal is diagnosis, baseline creation, regression detection, or optimization.
+
+3. **Establish a baseline**  
+   Identify current performance under representative conditions.
+
+4. **Collect evidence**  
+   Use profiling, tracing, metrics, or controlled experiments as appropriate.
+
+5. **Generate optimization options**  
+   Produce **at least two and preferably three viable options**, strictly derived from:
+   - observed bottlenecks
+   - system behavior
+   - constraints and maturity
+
+6. **Evaluate options objectively**  
+   Compare expected gains, cost, risk, and maintainability.
+
+7. **Formulate a recommendation**  
+   Recommend one option with explicit, defensible rationale.
+
+8. **Confirm before optimizing**  
+   No optimization should be applied without DEV approval.
+
+---
 
 ## Options & trade-offs
 
-Option A: Quick wins (melhorias locais e baixo risco).
+Based on the analysis above, generate **context-specific optimization strategies**.
 
-- Pros: rapido, pouco impacto.
-- Cons: ganhos limitados.
+Examples of dimensions to vary (not presets):
 
-Option B: Otimizacao estruturada (profiling profundo e refatoracao).
+- Local vs cross-cutting changes
+- Algorithmic vs infrastructural optimizations
+- Code-level vs architectural adjustments
+- Short-term wins vs long-term improvements
+- Performance gain vs complexity increase
 
-- Pros: ganhos maiores e duradouros.
-- Cons: mais tempo e risco.
+For **each option**, include:
+
+- **Description**: What would change and where
+- **Pros**: Expected performance or cost improvements
+- **Cons**: Complexity, risk, or maintenance cost
+- **Risk profile**: Likelihood of regressions or mis-optimization
+- **Estimated impact**: Based on measurements or benchmarks
+- **Fit to current repo maturity**
+
+Options must be **fully derived from collected evidence**, never pre-selected.
+
+---
 
 ## Recommendation
 
-Recomendo Option A enquanto nao houver baseline e testes de regressao.
-Racional:
+Select **one** option as the recommended path.
 
-- Sinais indicam falta de testes/CI, o que aumenta risco de regressao.
-- Quick wins permitem validar impacto sem grandes mudancas.
-- Cria base de metricas para decidir proxima etapa.
+### Recommendation criteria
+
+The recommendation must explicitly consider:
+
+- Measured or benchmarked performance impact
+- Cost–benefit ratio
+- Risk of functional or performance regressions
+- Ease of validation and rollback
+- Alignment with system and team maturity
+
+### Rationale (required)
+
+Provide a short rationale (3–6 bullets) explaining:
+
+- Why this option best addresses the observed bottleneck
+- Which trade-offs are consciously accepted
+- What data or benchmarks informed the choice
+- What future optimizations are intentionally deferred
+
+---
 
 ## Output format
 
-- Repo Signals (bloco curto)
-- Metricas alvo e baseline
-- Gargalos principais e evidencia
-- Opcoes com impacto estimado
-- Recomendacao e plano de verificacao
+The response must include:
+
+1. Confirmed Repo Signals
+2. Performance goals and baseline
+3. Identified bottlenecks with evidence
+4. Generated options with trade-offs
+5. Clear recommendation with rationale
+6. Proposed change scope
+7. Validation and success criteria
+8. Open questions for the DEV
+
+---
 
 ## Safety checks
 
-- Evitar otimizar sem medir.
-- Garantir que nao ha regressao funcional.
-- Documentar impacto e como reverter.
+- Never optimize without measured evidence
+- Avoid conflating correlation with causation
+- Guard against performance gains that reduce correctness
+- Watch for environment-specific artifacts
+- Document how to revert changes if assumptions fail
+
+---
 
 ## Dev confirmation gates
 
-- Confirmar metas de performance.
-- Aprovar instrumentacao e coleta de dados.
-- Escolher opcao de otimizacao.
-- Aprovar mudancas que afetem comportamento/UX.
+Explicit DEV approval is required before:
+
+- Adding or modifying instrumentation
+- Applying optimizations that affect behavior
+- Refactoring for performance reasons
+- Introducing performance-critical dependencies
+- Shipping changes without regression validation
+
+Without confirmation, **do not proceed**.

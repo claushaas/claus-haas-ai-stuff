@@ -1,83 +1,183 @@
 ---
 name: dependency-upgrades
-description: Gestao de dependencias e upgrades com foco em risco, compatibilidade e verificacao. Use ao atualizar pacotes, corrigir CVEs ou reduzir divida tecnica.
+description: Dependency management and upgrades with a focus on risk, compatibility, and verification. Use when updating packages, fixing CVEs, or reducing technical debt.
+
 ---
 
-## Name
+# Skill: Build & CI Triage
 
-dependency-upgrades
+## Purpose
 
-## When to use
+Analyze and resolve build and CI failures by **diagnosing the root cause**, **deriving context-specific remediation options**, and **recommending a fix based on risk, cost, and impact**.
 
-- Atualizar dependencias por CVE.
-- Resolver conflitos de versao.
-- Modernizar stack ou tooling.
+This skill must not assume that the fastest fix is always the best fix.  
+All remediation strategies must be derived from the current repository context and validated with the DEV before execution.
 
-## Inputs required
+---
 
-- Lista de pacotes alvo e motivo do upgrade.
-- Tolerancia a breaking changes.
-- Disponibilidade de testes e ambiente de staging.
-- Se algo estiver faltando, parar e perguntar ao DEV.
-Perguntas ao DEV:
-- Quais pacotes sao prioridade?
-- Aceita upgrades major agora?
-- Ha janela de release ou freeze?
+## When to Use
 
-## Repo Signals
+- Local build failures (`npm run build`, `pnpm build`, etc.)
+- CI job failures (lint, typecheck, tests, bundling)
+- Dependency, configuration, or environment-related errors
+- Regressions introduced by recent changes
+- Flaky or intermittent CI behavior blocking progress
 
-Preencher este bloco antes de qualquer plano. Se algo estiver Unknown, perguntar ao DEV.
+---
 
-- Stack: Node.js (package.json, type: module). Frameworks: Unknown.
-- Convencoes: Unknown (nenhum lint/format detectado).
-- Tests: script `test` placeholder, sem framework detectado.
-- CI/CD: Unknown (sem `.github/workflows` detectado).
-- Arquitetura: Unknown (sem `src/`/`packages/`; somente `/exemplos`).
+## Inputs Required
+
+Before proposing any fix, collect and confirm:
+
+- Full error logs (local and/or CI)
+- Command(s) used to trigger the failure
+- Execution environment details (local vs CI, OS, Node/runtime versions)
+- Recent relevant changes (code, config, dependencies)
+
+If any required input is missing, **stop and ask the DEV**.
+
+### Mandatory DEV Questions
+
+- Can you share the full error output?
+- Does the failure occur locally, in CI, or both?
+- Were there recent changes to dependencies, tooling, or configuration?
+- Is restoring the build quickly more important than addressing root causes?
+
+---
+
+## Repo Signals (Observation Only)
+
+This section must be completed **before proposing any remediation**.  
+Only record **observable facts**. If anything is unclear, confirm with the DEV.
+
+- **Stack**: Language(s), runtime(s), package manager
+- **Build tooling**: Bundler, transpiler, type checker
+- **Linting / formatting**: Presence, strictness, blocking behavior
+- **Testing**: Whether tests are part of the build or CI
+- **CI/CD**: Existence, scope, enforcement level
+- **Failure behavior**: Deterministic vs intermittent
+- **Recent churn**: Frequency of build-related changes
+
+---
+
+## Implications (Derived)
+
+From the observed Repo Signals, derive implications such as:
+
+- Urgency to restore developer workflow
+- Risk of introducing secondary regressions
+- Cost of modifying build or CI configuration
+- Likelihood that the failure is a symptom vs a root cause
+- Suitability of short-term vs structural fixes
+
+Explicitly state assumptions and confirm them with the DEV if needed.
+
+---
 
 ## Process
 
-1. Fazer Repo Scan e validar Repo Signals com o DEV. Perguntar: "Posso seguir assumindo estes sinais?"
-2. Classificar dependencias por risco (major vs patch). Perguntar: "Estas prioridades estao corretas?"
-3. Propor plano de upgrade em etapas. Perguntar: "Qual plano devo seguir?"
-4. Antes de alterar versoes, pedir OK. Perguntar: "Posso atualizar os pacotes?"
-5. Validar com build/test. Perguntar: "Posso executar as validacoes?"
+1. **Validate Repo Signals**  
+   Ask the DEV:  
+   > “Can I proceed assuming these repository signals are accurate?”
 
-## Options & trade-offs
+2. **Reproduce or Isolate the Failure**  
+   Confirm scope, determinism, and reproduction path.  
+   Ask:  
+   > “Is this reproduction path correct?”
 
-Option A: Upgrades patch/minor com baixo risco.
+3. **Classify the Failure**  
+   Examples: syntax/type error, dependency mismatch, config drift, environment issue, tooling regression.
 
-- Pros: estabilidade, menos regressao.
-- Cons: pode manter divida tecnica.
+4. **Derive Remediation Options**  
+   Generate **at least two and preferably three viable options**, strictly derived from:
+   - Repo Signals
+   - Failure characteristics
+   - Team constraints
 
-Option B: Upgrades major com migracao.
+5. **Evaluate Trade-offs**  
+   Compare options objectively based on risk, effort, blast radius, and follow-up cost.
 
-- Pros: acesso a novas features e fixes.
-- Cons: maior risco e tempo.
+6. **Formulate a Recommendation**  
+   Recommend one option with explicit rationale.
+
+7. **Confirm Before Any Change**  
+   No fixes, config changes, or dependency updates without DEV approval.
+
+---
+
+## Options & Trade-offs (Context-Derived)
+
+This section must be generated **after analysis**, not pre-filled.
+
+For each option, include:
+
+- **Description**: What changes and where
+- **Pros**: Concrete benefits (speed, safety, clarity)
+- **Cons**: Concrete drawbacks (technical debt, partial fixes)
+- **Risk Profile**: Likelihood and impact of side effects
+- **Operational Cost**: CI time, coordination, maintenance
+- **Fit to Current Repo Maturity**
+
+Options must be **direct consequences of observed signals**, not generic templates.
+
+---
 
 ## Recommendation
 
-Recomendo Option A ate existirem testes/CI confiaveis.
-Racional:
+Select **one** option as the recommended path.
 
-- Sinais mostram ausencia de testes, o que aumenta risco de regressao.
-- Upgrades pequenos permitem validar impacto.
-- Reduz probabilidade de breaking changes inesperadas.
+### Recommendation Criteria
 
-## Output format
+The recommendation must explicitly consider:
 
-- Repo Signals (bloco curto)
-- Matriz de upgrades (pacote, alvo, risco)
-- Plano em etapas e comandos
-- Checagens e rollback
+- Time to restore a working build
+- Risk of introducing new failures
+- Cost and feasibility of rollback
+- Current repository maturity
+- Team velocity and delivery pressure
 
-## Safety checks
+### Rationale (Required)
 
-- Verificar changelog e breaking changes.
-- Atualizar lockfile de forma controlada.
-- Evitar upgrade de varias majors ao mesmo tempo.
+Provide a concise rationale explaining:
 
-## Dev confirmation gates
+- Why this option best fits the current context
+- Which trade-offs are consciously accepted
+- What follow-up work should be scheduled later (if any)
 
-- Confirmar pacotes e versoes alvo.
-- Aprovar upgrades major.
-- Aprovar remocao/substituicao de dependencias.
+---
+
+## Output Format
+
+The response must include:
+
+1. Confirmed Repo Signals
+2. Summary of the failure and suspected root cause
+3. Context-derived remediation options with trade-offs
+4. Clear recommendation with rationale
+5. Proposed fix scope (files/configs affected)
+6. Validation steps (commands to re-run)
+7. Open questions for the DEV
+
+---
+
+## Safety Checks
+
+- Avoid unrelated refactors during triage
+- Do not mask errors without understanding impact
+- Ensure the same failing command now passes
+- Avoid environment-specific fixes leaking into CI
+- Clearly flag temporary workarounds
+
+---
+
+## Dev Confirmation Gates
+
+Explicit DEV approval is required before:
+
+- Applying fixes beyond minimal scope
+- Changing build or CI configuration
+- Modifying dependency versions
+- Introducing temporary workarounds
+- Committing changes related to the failure
+
+Without confirmation, **do not proceed**.

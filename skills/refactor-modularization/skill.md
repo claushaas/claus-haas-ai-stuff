@@ -1,94 +1,203 @@
 ---
 name: refactor-modularization
-description: Refatoracao e modularizacao segura para reduzir acoplamento, duplicacao e complexidade. Use quando houver codigo grande, dependencias cruzadas ou necessidade de extrair modulos.
+description: Refactoring and safe modularization to reduce coupling, duplication, and complexity. Use when there is large code, cross-dependencies, or a need to extract modules.
 ---
 
-## Name
+# Name
 
 refactor-modularization
 
+---
+
+## Purpose
+
+Guide safe and incremental refactoring and modularization efforts **without assuming
+architecture, maturity, or target structure upfront**.
+
+Use this skill to reduce coupling, duplication, and cognitive load while **preserving
+behavior**, enabling future evolution, and respecting the current constraints of the
+repository and team.
+
+This skill prioritizes **evidence-driven decisions**, not idealized architectures.
+
+---
+
 ## When to use
 
-- Arquivos grandes com muitas responsabilidades.
-- Duplicacao de logica em varios modulos.
-- Dependencias ciclicas ou acoplamento alto.
-- Necessidade de separar camadas (API, dominio, infra).
+Use this skill when:
+
+* Codebases show growing complexity or unclear boundaries
+* Files or modules have multiple responsibilities
+* Logic is duplicated across components or layers
+* Dependencies are tangled or implicitly coupled
+* The team wants to refactor safely without destabilizing delivery
+* Architectural improvements are desired but constraints are unclear
+
+---
 
 ## Inputs required
 
-- Objetivo principal da refatoracao.
-- Lista de comportamentos que nao podem mudar.
-- Nivel de risco aceitavel e janela de entrega.
-- Estado atual dos testes e tempo para cria-los.
-- Se algo estiver faltando, parar e perguntar ao DEV.
-Perguntas ao DEV:
-- Qual area e prioridade?
-- Quais comportamentos sao criticos?
-- Posso criar testes de caracterizacao?
-- Qual o limite de escopo por iteracao?
+Before proposing any refactor or modularization, gather:
 
-## Repo Signals
+* Primary motivation (maintainability, velocity, risk reduction, scalability)
+* Areas of the code perceived as problematic or fragile
+* Behaviors that **must not change**
+* Acceptable risk level and delivery constraints
+* Availability (or absence) of tests
+* Expected lifetime of the system or feature
 
-Preencher este bloco antes de qualquer plano. Se algo estiver Unknown, perguntar ao DEV.
+If any of this context is missing, **stop and ask the DEV**.
 
-- Stack: Node.js (package.json, type: module). Frameworks: Unknown.
-- Convencoes: Unknown (nenhum lint/format detectado).
-- Tests: script `test` placeholder, sem framework detectado.
-- CI/CD: Unknown (sem `.github/workflows` detectado).
-- Arquitetura: Unknown (sem `src/`/`packages/`; somente `/exemplos`).
+### Mandatory DEV questions
+
+* What problem are we trying to solve with this refactor?
+* Which behaviors are critical and must remain unchanged?
+* Where is change currently risky or slow?
+* How much disruption is acceptable in the short term?
+* Can we add tests, even temporary ones, if needed?
+
+---
+
+## Repo Signals (observation)
+
+Capture only **observable facts** from a quick repo scan.
+If something is unclear, record it as `Unknown` and confirm with the DEV.
+
+* **Stack**: Languages, runtimes, frameworks
+* **Structure**: Folder layout, module boundaries, file sizes
+* **Coupling signals**: Circular imports, shared globals, cross-layer dependencies
+* **Duplication**: Repeated logic or patterns across files
+* **Testing maturity**: Unit, integration, characterization tests
+* **CI/CD**: Presence of automated validation
+* **Change patterns**: Large diffs, frequent hotfixes, fragile areas
+
+Do not infer intent. Only record what is visible.
+
+---
+
+## Implications (interpretation)
+
+Based on Repo Signals and inputs, derive implications such as:
+
+* How risky structural changes are in this repo
+* Whether refactoring must be defensive and incremental
+* Where boundaries are unclear vs. merely undocumented
+* How much confidence tests (or lack thereof) provide
+* Whether modularization should precede or follow cleanup
+
+Explicitly state uncertainties and assumptions.
+
+---
 
 ## Process
 
-1. Fazer Repo Scan e validar Repo Signals com o DEV. Perguntar: "Posso seguir assumindo estes sinais?"
-2. Mapear hotspots (arquivos grandes, duplicacao, dependencias). Perguntar: "Quais hotspots priorizar?"
-3. Definir invariantes e entradas/saidas. Perguntar: "Estas invariantes estao corretas?"
-4. Propor opcoes de refatoracao com trade-offs. Perguntar: "Qual opcao devo seguir?"
-5. Criar plano incremental com etapas pequenas e checkpoints. Perguntar: "Posso detalhar o plano e riscos?"
-6. Antes de alterar codigo, confirmar escopo e rollback. Perguntar: "Posso iniciar as mudancas?"
+1. **Validate observations**
+   Ask the DEV:
+
+   > “Can I proceed assuming these repository signals are accurate?”
+
+2. **Clarify goals and non-goals**
+   Identify what success looks like — and what is out of scope.
+   Ask:
+
+   > “What should *not* change as a result of this refactor?”
+
+3. **Identify hotspots**
+   Locate areas of high churn, complexity, or duplication.
+   Ask:
+
+   > “Do these hotspots match your experience?”
+
+4. **Establish invariants**
+   Define stable inputs, outputs, and behaviors.
+
+5. **Generate options from context**
+   Produce **at least two and preferably three** viable approaches,
+   derived entirely from the analysis above.
+
+6. **Evaluate options objectively**
+   Compare risk, scope, effort, reversibility, and long-term impact.
+
+7. **Recommend and confirm**
+   Make a defensible recommendation and request approval before changes.
+
+---
 
 ## Options & trade-offs
 
-Option A: Refatorar in-place, extraindo funcoes e modulos aos poucos.
+Based on the analysis above, generate **context-specific options**.
+Do **not** use predefined refactoring templates.
 
-- Pros: menor risco, diff pequeno, facil reverter.
-- Cons: progresso mais lento, pode manter acoplamento temporario.
+Each option must differ meaningfully in **scope, risk, effort, and reversibility**.
 
-Option B: Extrair novo modulo com facade e migrar chamadas.
+For **each option**, include:
 
-- Pros: clareza de limites, facilita testes.
-- Cons: exige mapeamento completo, maior alteracao.
+* **Description**: What changes structurally and what stays the same
+* **Problems addressed**: Which pains this option reduces
+* **Pros**: Concrete benefits
+* **Cons**: Concrete risks or limitations
+* **Change surface**: Size and spread of diffs
+* **Reversibility**: Ease of rollback
+* **Preconditions**: Tests, documentation, alignment needed
+
+If only two options are viable, explain why a third is not.
+
+---
 
 ## Recommendation
 
-Recomendo Option A no estado atual do repo.
-Racional:
+Select the option that offers the **best cost–benefit trade-off** given:
 
-- Nao ha sinais de testes ou CI, o que torna mudancas amplas arriscadas.
-- Estrutura atual parece pequena; ganhos podem vir de passos curtos.
-- Facilita validar comportamento com testes de caracterizacao.
-- Menor custo de rollback.
+* Current repo and test maturity
+* Risk tolerance and delivery pressure
+* Expected lifetime of the system
+* Team familiarity with the codebase
+* Benchmarks from similar refactors (if available)
+
+### Rationale (required)
+
+Provide a concise rationale (3–6 bullets) explaining:
+
+* Why this option fits current constraints
+* Which trade-offs are intentionally accepted
+* What risks remain and how they are mitigated
+* What follow-up refactors may be needed later
+
+Clearly state assumptions if benchmarks or historical data are missing.
+
+---
 
 ## Output format
 
-- Repo Signals (bloco curto)
-- Hotspots e invariantes
-- Opcoes com trade-offs
-- Recomendacao com racional
-- Plano em etapas pequenas (com checkpoints)
-- Plano de testes e verificacao
-- Perguntas abertas para o DEV
+The final response must include:
+
+1. Confirmed Repo Signals
+2. Identified hotspots and invariants
+3. Key constraints and uncertainties
+4. Generated refactoring options with trade-offs
+5. Clear recommendation with rationale
+6. Incremental execution and validation plan
+7. Open questions for the DEV
+
+---
 
 ## Safety checks
 
-- Nao mudar comportamento sem teste cobrindo.
-- Evitar renames massivos e mudancas cosmeticas.
-- Manter APIs publicas ou versionar mudancas.
-- Verificar dependencias ciclicas apos cada etapa.
+* Do not change behavior without validation
+* Avoid large renames or cosmetic churn
+* Keep diffs reviewable and incremental
+* Preserve public APIs or version changes explicitly
+* Prefer reversible steps over “big rewrites”
+
+---
 
 ## Dev confirmation gates
 
-- Confirmar hotspots e invariantes.
-- Escolher opcao de refatoracao.
-- Aprovar criacao de novos modulos/pastas.
-- Aprovar remocoes ou deprecacoes.
-- Aprovar inicio das mudancas.
+Explicit DEV approval is required before:
+
+* Large structural moves or module extraction
+* Introducing new public boundaries or APIs
+* Removing or consolidating existing modules
+* Refactors that span multiple subsystems
+
+Without confirmation, **do not proceed**.

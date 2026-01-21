@@ -1,84 +1,202 @@
 ---
 name: test-strategy
-description: Definir estrategia de testes (unit, integration, e2e) baseada em risco e maturidade do repo. Use quando faltar cobertura ou ao planejar novas features.
+description: Define a testing strategy (unit, integration, end-to-end) based on repository risk and maturity. Use it when test coverage is lacking or when planning new features.
 ---
 
-## Name
+# Name
 
 test-strategy
 
+---
+
+## Purpose
+
+Guide the definition, prioritization, and evolution of a **test strategy grounded in observed risk, system behavior, and repository maturity** — **without assuming tooling, coverage targets, or testing pyramids upfront**.
+
+This skill exists to help teams move from *uncertain quality* to *defensible confidence*, producing a test approach that is:
+
+- Technically justifiable
+- Adaptable to immature and mature repositories
+- Compatible with Codex, Copilot, and human review
+- Explicit about trade-offs, blind spots, and cost
+
+---
+
 ## When to use
 
-- Repositorio sem testes ou cobertura insuficiente.
-- Nova feature critica ou refactor grande.
-- Definir padroes de testes e ferramentas.
+Use this skill when:
+
+- A repository has little or no test coverage
+- Coverage exists but confidence in changes is still low
+- Planning a large refactor, migration, or risky feature
+- Tests exist but are slow, flaky, or misaligned with risk
+- Engineering velocity is constrained by fear of regressions
+- Teams disagree on *what* should be tested and *why*
+
+---
 
 ## Inputs required
 
-- Fluxos criticos e areas de maior risco.
-- Prazo e budget para testes.
-- Ambiente de execucao (local/CI).
-- Se algo estiver faltando, parar e perguntar ao DEV.
-Perguntas ao DEV:
-- Quais fluxos sao mais criticos?
-- Qual o prazo para obter cobertura minima?
-- Qual ferramenta prefere (se existir)?
+Before proposing any test strategy, gather:
 
-## Repo Signals
+- Critical user-facing and system-facing behaviors
+- Areas where failures would be most costly (business, data, trust)
+- Current test presence (if any) and how it is used
+- Release cadence and rollback tolerance
+- Team capacity and appetite for test investment
+- Constraints imposed by CI, infra, or runtime environments
 
-Preencher este bloco antes de qualquer plano. Se algo estiver Unknown, perguntar ao DEV.
+If any of this context is missing, **stop and ask the DEV**.
 
-- Stack: Node.js (package.json, type: module). Frameworks: Unknown.
-- Convencoes: Unknown (nenhum lint/format detectado).
-- Tests: script `test` placeholder, sem framework detectado.
-- CI/CD: Unknown (sem `.github/workflows` detectado).
-- Arquitetura: Unknown (sem `src/`/`packages/`; somente `/exemplos`).
+### Mandatory DEV questions
+
+- Which failures would be most damaging if they reached production?
+- Where do regressions historically occur (if known)?
+- How often do we release, and how quickly can we roll back?
+- What currently gives us confidence when changing code?
+- What is the acceptable cost (time/complexity) of testing right now?
+
+---
+
+## Repo Signals (observation)
+
+Capture only **observable facts** from a lightweight repo scan.  
+If unclear, mark as `Unknown` and confirm with the DEV.
+
+- **Stack**: Languages, runtimes, frameworks
+- **System shape**: Monolith, services, libraries, clients
+- **Test presence**: Unit, integration, e2e (or none)
+- **Test execution**: Local-only, CI, blocking vs advisory
+- **Release mechanics**: Manual, automated, staged
+- **Change surface**: Frequency and size of diffs
+- **Historical signals**: Test failures, flaky behavior, skipped suites
+
+Do **not** infer intent or maturity. Only record what is visible.
+
+---
+
+## Implications (interpretation)
+
+From Repo Signals and inputs, derive implications such as:
+
+- Where tests would reduce real risk vs add noise
+- Which parts of the system are hardest to reason about
+- Whether fast feedback or deep coverage matters more right now
+- The realistic ceiling for test investment at this stage
+- How much confidence can be achieved per unit of effort
+
+Explicitly state:
+
+- Assumptions
+- Uncertainties
+- Known blind spots
+
+---
 
 ## Process
 
-1. Fazer Repo Scan e validar Repo Signals com o DEV. Perguntar: "Posso seguir assumindo estes sinais?"
-2. Mapear riscos e priorizar areas. Perguntar: "Esta prioridade faz sentido?"
-3. Propor matriz de testes por camada. Perguntar: "Qual abordagem prefere?"
-4. Definir cobertura minima e criterios de aceite. Perguntar: "Concorda com os criterios?"
-5. Antes de adicionar tooling, pedir OK. Perguntar: "Posso adicionar ferramentas de teste?"
+1. **Validate observations**  
+   Ask the DEV:  
+   > “Can I proceed assuming these repository signals are accurate?”
+
+2. **Identify risk-bearing behaviors**  
+   Focus on *what must not break*, not abstractions.
+
+3. **Map behaviors to confidence gaps**  
+   Ask:  
+   > “Where do we currently rely on hope instead of evidence?”
+
+4. **Assess constraints**  
+   Technical, organizational, and temporal.
+
+5. **Generate options from context**  
+   Produce **at least two and preferably three** viable strategies, derived entirely from the analysis above.
+
+6. **Evaluate options objectively**  
+   Compare cost, confidence gained, feedback latency, and long-term maintainability.
+
+7. **Recommend and confirm**  
+   Make a defensible recommendation and request approval before execution.
+
+---
 
 ## Options & trade-offs
 
-Option A: Base minima (smoke + unit para pontos criticos).
+Based on the analysis above, generate **context-specific options**.  
+Do **not** use predefined templates or pyramids.
 
-- Pros: rapido, baixo custo.
-- Cons: cobertura limitada.
+Each option must differ meaningfully in **scope, cost, risk, and confidence profile**.
 
-Option B: Piramide completa (unit + integration + e2e).
+For **each option**, include:
 
-- Pros: alta confiabilidade.
-- Cons: mais tempo e manutencao.
+- **Description**: What is tested, at which boundaries, and why
+- **Confidence gained**: What failures this would reliably catch
+- **Pros**: Concrete advantages
+- **Cons**: Concrete limitations or risks
+- **Operational cost**: Writing, maintaining, and running tests
+- **Feedback speed**: How quickly failures surface
+- **Failure blind spots**: What this option does *not* protect against
+- **Preconditions**: Tooling, CI support, refactors, or process changes required
+
+If only two options are viable, explicitly explain why a third is not.
+
+---
 
 ## Recommendation
 
-Recomendo Option A como ponto de partida.
-Racional:
+Select the option with the **best cost–confidence trade-off** given:
 
-- Sinais mostram ausencia de testes e CI, entao comecar pequeno reduz risco.
-- Permite criar base de testes e evoluir para integration/e2e.
-- Evita bloquear entregas enquanto estrutura testes.
+- Risk profile of the system
+- Expected change frequency
+- Team capacity and experience
+- CI and release constraints
+- Benchmarks from similar systems or prior efforts (if available)
+
+### Rationale (required)
+
+Provide a concise rationale (3–6 bullets) covering:
+
+- Why this option fits current constraints
+- Which trade-offs are intentionally accepted
+- Which risks remain and why they are acceptable
+- How this strategy can evolve over time
+- What evidence would justify revisiting the decision
+
+State assumptions clearly if benchmarks or historical data are missing.
+
+---
 
 ## Output format
 
-- Repo Signals (bloco curto)
-- Matriz de testes (area x tipo)
-- Backlog priorizado de testes
-- Comandos e ferramentas sugeridos
-- Criterios de aceite e coverage alvo
+The final response must include:
+
+1. Confirmed Repo Signals  
+2. Risk-bearing behaviors and failure modes  
+3. Identified confidence gaps and constraints  
+4. Generated options with explicit trade-offs  
+5. Clear recommendation with rationale  
+6. Execution, validation, and evolution plan  
+7. Open questions for the DEV  
+
+---
 
 ## Safety checks
 
-- Evitar testes flakey; preferir determinismo.
-- Isolar dependencias externas com mocks.
-- Garantir que testes nao bloqueiem o fluxo de dev.
+- Do not over-test low-risk or volatile code paths
+- Avoid brittle tests coupled to implementation details
+- Treat early coverage as directional, not absolute
+- Guard against slow or flaky suites blocking delivery
+- Ensure tests increase confidence, not ceremony
+
+---
 
 ## Dev confirmation gates
 
-- Confirmar fluxos criticos.
-- Aprovar cobertura minima.
-- Aprovar adicao de ferramentas/dep.
+Explicit DEV approval is required before:
+
+- Introducing new test tooling or frameworks
+- Making tests blocking in CI
+- Refactoring code solely to enable testing
+- Enforcing coverage thresholds or quality gates
+
+Without confirmation, **do not proceed**.

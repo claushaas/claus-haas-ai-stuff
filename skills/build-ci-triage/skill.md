@@ -1,84 +1,179 @@
 ---
 name: build-ci-triage
-description: Triage de falhas de build e CI com foco em corrigir erros rapidamente com diffs minimos. Use quando build falhar localmente ou no CI.
+description: Triage build and CI failures with a focus on fixing errors quickly using minimal diffs. Use when the build fails locally or in CI.
 ---
 
-## Name
+# Name
 
 build-ci-triage
 
+---
+
 ## When to use
 
-- `npm run build` ou job de CI falha.
-- Erros de tipo, lint ou bundling.
-- Falhas de dependencias ou configuracao.
+Use this skill when build or CI failures block development, including:
+
+- Local build failures (`npm run build`, `pnpm build`, etc.)
+- CI job failures (lint, typecheck, test, bundle)
+- Dependency, configuration, or environment-related errors
+- Regressions introduced by recent changes
+
+---
 
 ## Inputs required
 
-- Logs completos do erro e comando usado.
-- Ambiente (local vs CI) e versoes.
-- Ultimas mudancas relevantes.
-- Se algo estiver faltando, parar e perguntar ao DEV.
-Perguntas ao DEV:
-- Pode compartilhar o log completo?
-- O erro ocorre local e no CI?
-- Houve mudancas recentes de dependencias?
+Before proposing any fix, this skill requires:
 
-## Repo Signals
+- Full error logs (local and/or CI)
+- Command used to trigger the failure
+- Execution environment (local, CI, OS, Node/runtime versions)
+- Recent relevant changes (code, config, dependencies)
 
-Preencher este bloco antes de qualquer plano. Se algo estiver Unknown, perguntar ao DEV.
+If any input is missing, **stop and ask the DEV**.
 
-- Stack: Node.js (package.json, type: module). Frameworks: Unknown.
-- Convencoes: Unknown (nenhum lint/format detectado).
-- Tests: script `test` placeholder, sem framework detectado.
-- CI/CD: Unknown (sem `.github/workflows` detectado).
-- Arquitetura: Unknown (sem `src/`/`packages/`; somente `/exemplos`).
+### Mandatory DEV questions
+
+- Can you share the full error output?
+- Does the failure happen locally, in CI, or both?
+- Were there recent dependency or config changes?
+- Is restoring the build quickly the top priority?
+
+---
+
+## Repo Signals (observation)
+
+This section must be completed **before proposing fixes**.  
+If any item is `Unknown`, confirm with the DEV.
+
+- **Stack**: Detected language, runtime, package manager
+- **Build tooling**: Bundler, transpiler, type checker
+- **Linting / formatting**: Presence and strictness
+- **Testing**: Whether tests run as part of the build
+- **CI/CD**: Existence, scope, and enforcement level
+- **Failure surface**: Deterministic vs intermittent failures
+
+Only record **observable facts** here.
+
+---
+
+## Implications (interpretation)
+
+From the observed Repo Signals, derive implications such as:
+
+- Urgency to restore developer flow
+- Risk of introducing secondary regressions
+- Cost of touching build or CI configuration
+- Likelihood that the failure is symptomatic vs root-cause
+
+> **Explicit bias of this skill**  
+> When build maturity or observability is low, this skill prioritizes **fast recovery and minimal diffs** over structural cleanup.
+
+---
 
 ## Process
 
-1. Fazer Repo Scan e validar Repo Signals com o DEV. Perguntar: "Posso seguir assumindo estes sinais?"
-2. Reproduzir erro e isolar causa. Perguntar: "Posso assumir este passo de reproducao?"
-3. Propor correcoes minimas (diff pequeno). Perguntar: "Posso aplicar esta correcao?"
-4. Se precisar alterar config/CI, pedir OK. Perguntar: "Posso ajustar configuracoes?"
-5. Validar com o mesmo comando do erro. Perguntar: "Posso executar a validacao?"
+1. **Validate Repo Signals**  
+   Ask the DEV:  
+   > “Can I proceed assuming these repository signals are correct?”
+
+2. **Reproduce or isolate the failure**  
+   Confirm scope and determinism.  
+   Ask:  
+   > “Is this reproduction path accurate?”
+
+3. **Identify failure category**  
+   Syntax/type error, dependency mismatch, config drift, environment issue, tooling regression.
+
+4. **Generate remediation options**  
+   Produce **at least two and preferably three viable options**, derived strictly from the current context.
+
+5. **Evaluate options objectively**  
+   Compare time-to-fix, risk, blast radius, and follow-up cost.
+
+6. **Formulate recommendation**  
+   Recommend one option with explicit rationale.
+
+7. **Confirm before applying changes**  
+   No fixes or config changes without DEV approval.
+
+---
 
 ## Options & trade-offs
 
-Option A: Fix minimo (corrigir erro especifico).
+Based on the current context, generate **contextual remediation strategies**, such as:
 
-- Pros: rapido, baixo risco.
-- Cons: nao resolve dividas estruturais.
+- A narrowly scoped fix addressing the immediate failure
+- A tooling or configuration adjustment reducing recurrence
+- A stabilizing workaround enabling progress while deferring root-cause work
 
-Option B: Ajuste de tooling/config (modernizar build/CI).
+For **each option**, include:
 
-- Pros: melhora estabilidade no longo prazo.
-- Cons: maior risco e escopo.
+- **Description**: What changes and where
+- **Pros**: Concrete benefits (speed, safety, clarity)
+- **Cons**: Concrete drawbacks (technical debt, partial fixes)
+- **Risk profile**: Likelihood of side effects
+- **Operational cost**: CI time, maintenance, coordination
+- **Fit to current repo maturity**
+
+Options must be **derived from observed signals**, not pre-defined templates.
+
+---
 
 ## Recommendation
 
-Recomendo Option A no repo atual.
-Racional:
+Select one option as the recommended path.
 
-- Sem CI definido, mudancas amplas podem gerar incerteza.
-- Fix minimo restabelece o fluxo rapidamente.
-- Melhor estabilizar antes de modernizar.
+### Recommendation criteria
+
+The recommendation must explicitly consider:
+
+- Time to restore a working build
+- Risk of introducing new failures
+- Cost of rollback if the fix is wrong
+- Team velocity and delivery pressure
+
+### Rationale (required)
+
+Provide a short rationale (3–6 bullets) explaining:
+
+- Why this option best fits the current situation
+- Which trade-offs are consciously accepted
+- What follow-up work should be scheduled later
+
+---
 
 ## Output format
 
-- Repo Signals (bloco curto)
-- Resumo do erro e causa raiz
-- Fix proposto (diff pequeno)
-- Passos de validacao
-- Riscos e follow-ups sugeridos
+The response must include:
+
+1. Confirmed Repo Signals
+2. Summary of the failure and suspected root cause
+3. Generated remediation options with trade-offs
+4. Clear recommendation with rationale
+5. Proposed fix scope (files/configs affected)
+6. Validation steps (commands to re-run)
+7. Open questions for the DEV
+
+---
 
 ## Safety checks
 
-- Evitar refactors nao relacionados.
-- Verificar se a correcao nao mascara o problema.
-- Garantir reprodutibilidade do build.
+- Avoid unrelated refactors while triaging
+- Do not mask errors without understanding impact
+- Ensure the same command that failed now passes
+- Watch for environment-specific fixes leaking into CI
+- Flag temporary workarounds explicitly
+
+---
 
 ## Dev confirmation gates
 
-- Confirmar reproducao e logs.
-- Aprovar mudancas em configs/CI.
-- Aprovar alteracoes de dependencias.
+Explicit DEV approval is required before:
+
+- Applying any fix beyond minimal scope
+- Changing build or CI configuration
+- Modifying dependency versions
+- Introducing temporary workarounds
+- Committing changes related to the failure
+
+Without confirmation, **do not proceed**.
