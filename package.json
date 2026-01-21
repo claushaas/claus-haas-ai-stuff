@@ -6,7 +6,11 @@
 	"author": "Claus Haas",
 	"type": "module",
 	"main": "index.js",
+	"bin": {
+		"skills-sync": "bin/skills-sync.js"
+	},
 	"scripts": {
+		"skills:sync": "node bin/skills-sync.js",
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"md:fix": "npx markdownlint-cli --fix skills/**/skill.md"
 	},
