@@ -4,15 +4,18 @@ description: Improve reliability via timeouts, retries, circuit breakers, degrad
 ---
 
 ## Name
+
 reliability-resilience
 
 ## When to use
+
 - External dependencies are flaky or slow.
 - Timeouts or cascading failures appear.
 - Need graceful degradation or fallback paths.
 - Establish reliability targets and guardrails.
 
 ## Inputs required
+
 - Critical paths and failure symptoms.
 - Dependency map (external services, queues, caches).
 - Current timeout/retry settings.
@@ -25,7 +28,9 @@ Questions for the DEV:
 - Can we degrade features under load?
 
 ## Repo Signals
+
 Fill this block before any plan. If something is Unknown, ask the DEV.
+
 - Stack: Node.js (`package.json`, type: module). Frameworks: Unknown.
 - Conventions: Unknown (no lint/format configs detected).
 - Tests: `test` script placeholder, no framework detected.
@@ -33,6 +38,7 @@ Fill this block before any plan. If something is Unknown, ask the DEV.
 - Architecture: Unknown (no `src/` or `packages/`; only `/exemplos`).
 
 ## Process
+
 1. Do a Repo Scan and confirm Repo Signals. Ask: "Can I proceed with these signals?"
 2. Map critical paths and dependencies. Ask: "Does this map reflect reality?"
 3. Identify failure modes and blast radius. Ask: "Are these the main risks?"
@@ -41,23 +47,29 @@ Fill this block before any plan. If something is Unknown, ask the DEV.
 6. Before implementing, confirm impact on UX and cost. Ask: "Can I proceed with these safeguards?"
 
 ## Options & trade-offs
+
 Option A: Minimal safeguards (timeouts, bounded retries, basic fallbacks).
+
 - Pros: fast, low complexity.
 - Cons: limited protection under high load.
 
 Option B: Full resilience (circuit breakers, bulkheads, queueing).
+
 - Pros: strong isolation and stability.
 - Cons: more complexity and operational overhead.
 
 ## Recommendation
+
 Recommend Option A to start.
 Rationale:
+
 - Repo signals show limited testing/CI, so simpler changes are safer.
 - Basic guardrails address the most common failure modes.
 - Easier to measure impact and iterate.
 - Provides foundation for later advanced patterns.
 
 ## Output format
+
 - Repo Signals (short block)
 - Critical paths and dependencies
 - Failure modes and blast radius
@@ -67,12 +79,14 @@ Rationale:
 - Open questions for the DEV
 
 ## Safety checks
+
 - Avoid infinite retries or unbounded backoff.
 - Ensure fallbacks do not leak sensitive data.
 - Protect against thundering herd during recovery.
 - Validate timeouts do not break core flows.
 
 ## Dev confirmation gates
+
 - Confirm critical paths and dependencies.
 - Approve degradation or fallback behavior.
 - Approve new infrastructure or middleware.
