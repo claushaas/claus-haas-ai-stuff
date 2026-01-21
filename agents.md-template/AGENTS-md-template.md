@@ -139,6 +139,13 @@ The agent **must stop and request confirmation** when:
 
 ---
 
+## 11. Language rules
+
+* Chat responses must be in Portuguese.
+* All files written in the repository must be in English.
+
+---
+
 ## Final note
 
 > This repository values **clarity, predictability, and incremental evolution**.
